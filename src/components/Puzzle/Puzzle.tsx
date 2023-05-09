@@ -9,7 +9,7 @@ export interface PuzzleProps extends React.ComponentProps<typeof Chessboard> {
   onSolve?: () => void;
   onFail?: () => void;
 }
-export const Puzzle: React.FC<PuzzleProps> = ({
+export const InternalPuzzle: React.FC<PuzzleProps> = ({
   puzzle: { fen, moves },
   onSolve,
   onFail,
@@ -30,11 +30,16 @@ export const Puzzle: React.FC<PuzzleProps> = ({
       customSquareStyles={getCustomSquareStyles(status, isPlayerTurn, lastMove)}
       boardOrientation={orientation}
       position={game.fen()}
-      onPieceDrop={(sourceSquare, targetSquare) => {
-        console.log("sourceSquare", sourceSquare);
-        return handlePieceDrop(sourceSquare, targetSquare);
-      }}
+      onPieceDrop={(sourceSquare, targetSquare) =>
+        handlePieceDrop(sourceSquare, targetSquare)
+      }
       {...rest}
     />
   );
+};
+
+export const Puzzle: React.FC<PuzzleProps> = (props) => {
+  const { puzzle } = props;
+  const key = `${puzzle.fen}-${puzzle.moves.join("-")}`;
+  return <InternalPuzzle key={key} {...props} />;
 };

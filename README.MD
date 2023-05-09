@@ -1,8 +1,10 @@
-I've updated the README to include the new utility function for creating a puzzle from a PGN:
-
 # react-chess-puzzle
 
 `react-chess-puzzle` is an open-source React library that provides a chess puzzle component, which allows users to interactively solve chess puzzles. This library leverages the `react-chessboard` package to render the chessboard.
+
+## Demo
+
+You can view the demo storybook [here](https://react-chess-puzzle.vercel.app/).
 
 ## Installation
 
@@ -50,7 +52,7 @@ The `Puzzle` component accepts all the props from the `Chessboard` component fro
 | Name       | Type         | Description                                                     |
 |------------|--------------|-----------------------------------------------------------------|
 | `puzzle`   | `PuzzleType` | The puzzle object containing the FEN string and moves sequence. |
-| `onSolv` | `() => void` | A callback function that is called when the puzzle is solved.   |
+| `onSolve` | `() => void` | A callback function that is called when the puzzle is solved.   |
 | `onFail` | `() => void` | A callback function that is called when the puzzle is failed.   |
 
 

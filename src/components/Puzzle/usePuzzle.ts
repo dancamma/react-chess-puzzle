@@ -5,6 +5,11 @@ import type { Move, Square } from "chess.js";
 
 export type Status = "in-progress" | "solved" | "unsolved";
 
+const getMove = (game: Chess, move: string): Move => {
+  const copy = new Chess(game.fen());
+  return copy.move(move);
+};
+
 export const usePuzzle = (
   puzzle: Puzzle,
   onSolve?: () => void,
@@ -34,6 +39,7 @@ export const usePuzzle = (
     safeGameMutate((game) => {
       game.move(moves[currentMoveIndex]);
     });
+
     setCurrentMoveIndex(currentMoveIndex + 1);
   };
 
@@ -42,6 +48,7 @@ export const usePuzzle = (
       return false;
     }
     const gameCopy = new Chess(game.fen());
+
     const move = gameCopy.move({
       from: sourceSquare,
       to: targetSquare,
@@ -54,7 +61,7 @@ export const usePuzzle = (
     if (move === null) return false;
 
     const lastGameCopyMove = gameCopy.history({ verbose: true }).pop();
-    if (lastGameCopyMove?.san !== moves[currentMoveIndex]) {
+    if (lastGameCopyMove?.san !== getMove(game, moves[currentMoveIndex]).san) {
       setStatus("unsolved");
       onFail && onFail();
     } else {
