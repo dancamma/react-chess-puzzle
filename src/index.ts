@@ -1,3 +1,2 @@
-export function sayHello() {
-  console.log("hello");
-}
+export { Puzzle } from "./components/Puzzle";
+export * from "./components/utils";

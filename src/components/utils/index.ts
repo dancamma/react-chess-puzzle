@@ -1,0 +1,1 @@
+export { fromPgn } from "./puzzle";
