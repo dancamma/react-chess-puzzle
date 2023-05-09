@@ -1,0 +1,38 @@
+{
+  "name": "react-chess-puzzle",
+  "version": "1.0.0",
+  "description": "A lightweight, customizable React component library for rendering and interacting with chess puzzles.",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "start": "npm run build -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dancamma/react-chess-puzzle.git"
+  },
+  "keywords": [
+    "react",
+    "chess",
+    "puzzle",
+    "component",
+    "typescript",
+    "game",
+    "board"
+  ],
+  "author": "Daniele Cammareri <daniele.cammareri@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dancamma/react-chess-puzzle/issues"
+  },
+  "homepage": "https://github.com/dancamma/react-chess-puzzle#readme",
+  "devDependencies": {
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
