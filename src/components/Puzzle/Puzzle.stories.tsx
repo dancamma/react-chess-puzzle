@@ -2,6 +2,27 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import React from "react";
 import { Puzzle } from "./Puzzle";
+import { fromPgn } from "../utils/puzzle";
+
+const pgn = `[Event "Paris"]
+[Site "Paris FRA"]
+[Date "1858.??.??"]
+[Round "?"]
+[White "Paul Morphy"]
+[Black "Duke Karl / Count Isouard"]
+[Result "1-0"]
+[EventDate "?"]
+[FEN "4kb1r/p2r1ppp/4qn2/1B2p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 1"]
+[ECO "C41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "33"]
+
+15. Bxd7+
+Nxd7 {And now for the memorable checkmating combination:} 16. Qb8+ $3 {[%c_effect
+b8;square;b8;type;Brilliant;persistent;true]} 16... Nxb8 17. Rd8# 1-0`;
+
+const puzzle = fromPgn(pgn);
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
@@ -9,7 +30,11 @@ const meta = {
   component: Puzzle,
   tags: ["components", "puzzle"],
   argTypes: {
-    backgroundColor: { control: "color" },
+    onSolve: { action: "onSolve" },
+    onFail: { action: "onFail" },
+  },
+  parameters: {
+    actions: { argTypesRegex: "^_on.*" },
   },
   decorators: [
     (Story) => (
@@ -26,5 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Primary: Story = {
-  args: {},
+  args: {
+    puzzle,
+  },
 };
