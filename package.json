@@ -9,7 +9,7 @@
     "build": "tsup src/index.ts",
     "start": "npm run build -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "storybook": "start-storybook -p 6006 -s public",
+    "storybook": "storybook dev -p 6006 -s public",
     "build-storybook": "storybook build",
     "release": "release-it"
   },

@@ -3,7 +3,7 @@ import { Chess } from "chess.js";
 import { Puzzle } from "../utils/puzzle";
 import type { Move, Square } from "chess.js";
 
-export type Status = "in-progress" | "solved" | "unsolved";
+export type Status = "not-started" | "in-progress" | "solved" | "unsolved";
 
 const getMove = (game: Chess, move: string): Move => {
   const copy = new Chess(game.fen());
@@ -21,7 +21,7 @@ export const usePuzzle = (
     game.turn() === "w" ? "white" : "black"
   );
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
-  const [status, setStatus] = useState<Status>("in-progress");
+  const [status, setStatus] = useState<Status>("not-started");
   const [lastMove, setLastMove] = useState<Move>();
 
   function safeGameMutate(modify: (game: Chess) => void) {
@@ -44,7 +44,7 @@ export const usePuzzle = (
   };
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
-    if (status !== "in-progress") {
+    if (["solved", "unsolved"].includes(status)) {
       return false;
     }
     const gameCopy = new Chess(game.fen());
@@ -69,6 +69,7 @@ export const usePuzzle = (
         setStatus("solved");
         onSolve && onSolve();
       } else {
+        setStatus("in-progress");
         setCurrentMoveIndex(currentMoveIndex + 1);
         setTimeout(() => makeNextMove(gameCopy, currentMoveIndex + 1), 250);
       }
@@ -107,7 +108,7 @@ export const usePuzzle = (
   const changePuzzle = (puzzle: Puzzle) => {
     setGame(new Chess(puzzle.fen));
     setCurrentMoveIndex(0);
-    setStatus("in-progress");
+    setStatus("not-started");
   };
 
   const restartPuzzle = () => {

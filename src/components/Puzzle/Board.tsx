@@ -22,6 +22,7 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
       onPieceDrop={(sourceSquare, targetSquare) =>
         handlePieceDrop(sourceSquare, targetSquare)
       }
+      animationDuration={status === "not-started" ? 0 : 300}
       {...rest}
     />
   );
