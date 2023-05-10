@@ -31,8 +31,6 @@ const puzzles = [
   },
 ];
 
-console.log(puzzles);
-
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Components/Puzzle",
@@ -68,11 +66,10 @@ export const Single: Story = {
 
 export const Multiple = (args: RootProps) => {
   const [puzzleIndex, setPuzzleIndex] = React.useState(0);
-  const [solved, setSolved] = React.useState(false);
   const puzzle = puzzles[puzzleIndex];
   return (
     <div>
-      <Puzzle.Root {...args} puzzle={puzzle} onSolve={() => setSolved(true)}>
+      <Puzzle.Root {...args} puzzle={puzzle}>
         <Puzzle.Board />
         <Puzzle.Reset asChild>
           <button>restart</button>
@@ -84,6 +81,7 @@ export const Multiple = (args: RootProps) => {
         >
           <button>next</button>
         </Puzzle.Reset>
+        <Puzzle.Hint>hint</Puzzle.Hint>
       </Puzzle.Root>
     </div>
   );

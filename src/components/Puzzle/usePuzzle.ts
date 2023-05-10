@@ -1,8 +1,8 @@
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Puzzle } from "../utils/puzzle";
 import type { Move, Square } from "chess.js";
-import { Status } from "./types";
+import { Status, Hint } from "./types";
 
 const getMove = (game: Chess, move: string): Move => {
   const copy = new Chess(game.fen());
@@ -22,6 +22,9 @@ export const usePuzzle = (
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [status, setStatus] = useState<Status>("not-started");
   const [lastMove, setLastMove] = useState<Move>();
+  const [nextMove, setNextMove] = useState<Move>(() => getMove(game, moves[0]));
+
+  const [hint, setHint] = useState<Hint>("none");
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((g) => {
@@ -37,12 +40,16 @@ export const usePuzzle = (
 
     safeGameMutate((game) => {
       game.move(moves[currentMoveIndex]);
+      if (moves.length > currentMoveIndex + 1) {
+        setNextMove(getMove(game, moves[currentMoveIndex + 1]));
+      }
     });
 
     setCurrentMoveIndex(currentMoveIndex + 1);
   };
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
+    setHint("none");
     if (["solved", "failed"].includes(status)) {
       return false;
     }
@@ -77,6 +84,18 @@ export const usePuzzle = (
     return true;
   }
 
+  const onHint = () => {
+    if (["solved", "failed"].includes(status)) {
+      return;
+    }
+
+    if (hint === "none") {
+      setHint("piece");
+    } else if (hint === "piece") {
+      setHint("move");
+    }
+  };
+
   const customSquareStyles: Record<string, CSSProperties> = {};
   if (status === "failed" && lastMove) {
     customSquareStyles[lastMove.from] = {
@@ -104,9 +123,12 @@ export const usePuzzle = (
   const isPlayerTurn = currentMoveIndex % 2 === 1;
 
   const changePuzzle = (puzzle: Puzzle) => {
-    setGame(new Chess(puzzle.fen));
+    const game = new Chess(puzzle.fen);
+    setGame(game);
     setCurrentMoveIndex(0);
     setStatus("not-started");
+    setLastMove(undefined);
+    setNextMove(getMove(game, puzzle.moves[0]));
   };
 
   return {
@@ -118,6 +140,9 @@ export const usePuzzle = (
     isPlayerTurn,
     changePuzzle,
     puzzle,
+    hint,
+    onHint,
+    nextMove,
   };
 };
 

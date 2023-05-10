@@ -11,12 +11,26 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
     throw new Error("PuzzleContext not found");
   }
 
-  const { game, status, lastMove, orientation, handlePieceDrop, isPlayerTurn } =
-    puzzleContext;
+  const {
+    game,
+    status,
+    lastMove,
+    nextMove,
+    orientation,
+    handlePieceDrop,
+    isPlayerTurn,
+    hint,
+  } = puzzleContext;
 
   return (
     <Chessboard
-      customSquareStyles={getCustomSquareStyles(status, isPlayerTurn, lastMove)}
+      customSquareStyles={getCustomSquareStyles(
+        status,
+        hint,
+        isPlayerTurn,
+        nextMove,
+        lastMove
+      )}
       boardOrientation={orientation}
       position={game.fen()}
       onPieceDrop={(sourceSquare, targetSquare) =>

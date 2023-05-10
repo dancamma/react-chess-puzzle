@@ -8,6 +8,7 @@ export type Controls = {
 
 export type Status = "not-started" | "in-progress" | "solved" | "failed";
 
+export type Hint = "none" | "piece" | "move";
 export interface PuzzleContext {
   puzzle: Puzzle;
   currentGame: Chess;
