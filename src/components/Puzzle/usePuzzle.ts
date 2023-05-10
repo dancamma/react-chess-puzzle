@@ -1,9 +1,8 @@
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Puzzle } from "../utils/puzzle";
 import type { Move, Square } from "chess.js";
-
-export type Status = "in-progress" | "solved" | "unsolved";
+import { Status, Hint } from "./types";
 
 const getMove = (game: Chess, move: string): Move => {
   const copy = new Chess(game.fen());
@@ -21,8 +20,11 @@ export const usePuzzle = (
     game.turn() === "w" ? "white" : "black"
   );
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
-  const [status, setStatus] = useState<Status>("in-progress");
+  const [status, setStatus] = useState<Status>("not-started");
   const [lastMove, setLastMove] = useState<Move>();
+  const [nextMove, setNextMove] = useState<Move>(() => getMove(game, moves[0]));
+
+  const [hint, setHint] = useState<Hint>("none");
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((g) => {
@@ -38,13 +40,17 @@ export const usePuzzle = (
 
     safeGameMutate((game) => {
       game.move(moves[currentMoveIndex]);
+      if (moves.length > currentMoveIndex + 1) {
+        setNextMove(getMove(game, moves[currentMoveIndex + 1]));
+      }
     });
 
     setCurrentMoveIndex(currentMoveIndex + 1);
   };
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
-    if (status !== "in-progress") {
+    setHint("none");
+    if (["solved", "failed"].includes(status)) {
       return false;
     }
     const gameCopy = new Chess(game.fen());
@@ -62,13 +68,14 @@ export const usePuzzle = (
 
     const lastGameCopyMove = gameCopy.history({ verbose: true }).pop();
     if (lastGameCopyMove?.san !== getMove(game, moves[currentMoveIndex]).san) {
-      setStatus("unsolved");
+      setStatus("failed");
       onFail && onFail();
     } else {
       if (currentMoveIndex + 1 === moves.length) {
         setStatus("solved");
         onSolve && onSolve();
       } else {
+        setStatus("in-progress");
         setCurrentMoveIndex(currentMoveIndex + 1);
         setTimeout(() => makeNextMove(gameCopy, currentMoveIndex + 1), 250);
       }
@@ -77,8 +84,20 @@ export const usePuzzle = (
     return true;
   }
 
+  const onHint = () => {
+    if (["solved", "failed"].includes(status)) {
+      return;
+    }
+
+    if (hint === "none") {
+      setHint("piece");
+    } else if (hint === "piece") {
+      setHint("move");
+    }
+  };
+
   const customSquareStyles: Record<string, CSSProperties> = {};
-  if (status === "unsolved" && lastMove) {
+  if (status === "failed" && lastMove) {
     customSquareStyles[lastMove.from] = {
       backgroundColor: "rgba(201, 52, 48, 0.5)",
     };
@@ -90,8 +109,7 @@ export const usePuzzle = (
 
   if (
     lastMove &&
-    (status === "solved" ||
-      (status !== "unsolved" && currentMoveIndex % 2 === 1))
+    (status === "solved" || (status !== "failed" && currentMoveIndex % 2 === 1))
   ) {
     customSquareStyles[lastMove.from] = {
       backgroundColor: "rgba(172, 206, 89, 0.5)",
@@ -104,6 +122,15 @@ export const usePuzzle = (
 
   const isPlayerTurn = currentMoveIndex % 2 === 1;
 
+  const changePuzzle = (puzzle: Puzzle) => {
+    const game = new Chess(puzzle.fen);
+    setGame(game);
+    setCurrentMoveIndex(0);
+    setStatus("not-started");
+    setLastMove(undefined);
+    setNextMove(getMove(game, puzzle.moves[0]));
+  };
+
   return {
     game,
     orientation,
@@ -111,6 +138,11 @@ export const usePuzzle = (
     lastMove,
     handlePieceDrop,
     isPlayerTurn,
+    changePuzzle,
+    puzzle,
+    hint,
+    onHint,
+    nextMove,
   };
 };
 
