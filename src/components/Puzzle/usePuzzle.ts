@@ -2,8 +2,7 @@ import { CSSProperties, useState } from "react";
 import { Chess } from "chess.js";
 import { Puzzle } from "../utils/puzzle";
 import type { Move, Square } from "chess.js";
-
-export type Status = "not-started" | "in-progress" | "solved" | "unsolved";
+import { Status } from "./types";
 
 const getMove = (game: Chess, move: string): Move => {
   const copy = new Chess(game.fen());
@@ -44,7 +43,7 @@ export const usePuzzle = (
   };
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
-    if (["solved", "unsolved"].includes(status)) {
+    if (["solved", "failed"].includes(status)) {
       return false;
     }
     const gameCopy = new Chess(game.fen());
@@ -62,7 +61,7 @@ export const usePuzzle = (
 
     const lastGameCopyMove = gameCopy.history({ verbose: true }).pop();
     if (lastGameCopyMove?.san !== getMove(game, moves[currentMoveIndex]).san) {
-      setStatus("unsolved");
+      setStatus("failed");
       onFail && onFail();
     } else {
       if (currentMoveIndex + 1 === moves.length) {
@@ -79,7 +78,7 @@ export const usePuzzle = (
   }
 
   const customSquareStyles: Record<string, CSSProperties> = {};
-  if (status === "unsolved" && lastMove) {
+  if (status === "failed" && lastMove) {
     customSquareStyles[lastMove.from] = {
       backgroundColor: "rgba(201, 52, 48, 0.5)",
     };
@@ -91,8 +90,7 @@ export const usePuzzle = (
 
   if (
     lastMove &&
-    (status === "solved" ||
-      (status !== "unsolved" && currentMoveIndex % 2 === 1))
+    (status === "solved" || (status !== "failed" && currentMoveIndex % 2 === 1))
   ) {
     customSquareStyles[lastMove.from] = {
       backgroundColor: "rgba(172, 206, 89, 0.5)",
@@ -111,10 +109,6 @@ export const usePuzzle = (
     setStatus("not-started");
   };
 
-  const restartPuzzle = () => {
-    changePuzzle(puzzle);
-  };
-
   return {
     game,
     orientation,
@@ -123,7 +117,7 @@ export const usePuzzle = (
     handlePieceDrop,
     isPlayerTurn,
     changePuzzle,
-    restartPuzzle,
+    puzzle,
   };
 };
 

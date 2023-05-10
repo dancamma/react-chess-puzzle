@@ -2,28 +2,37 @@ import React, { ReactElement, ReactNode, useContext } from "react";
 import { Puzzle } from "../utils/puzzle";
 import { PuzzleContext } from "./Root";
 import { isClickableElement } from "./utils";
+import { Status } from "./types";
 
-export interface ChangeProps {
+export interface ResetProps {
   asChild?: boolean;
-  puzzle: Puzzle;
-  onChange?: () => void;
+  puzzle?: Puzzle;
+  onReset?: () => void;
+  showOn?: Status[];
 }
 
-export const Change: React.FC<React.PropsWithChildren<ChangeProps>> = ({
+const defaultShowOn: Status[] = ["failed", "solved"];
+
+export const Reset: React.FC<React.PropsWithChildren<ResetProps>> = ({
   children,
   asChild,
   puzzle,
-  onChange,
+  onReset,
+  showOn = defaultShowOn,
 }) => {
   const puzzleContext = useContext(PuzzleContext);
   if (!puzzleContext) {
     throw new Error("PuzzleContext not found");
   }
-  const { changePuzzle } = puzzleContext;
+  const { changePuzzle, status } = puzzleContext;
   const handleClick = () => {
-    changePuzzle(puzzle);
-    onChange?.();
+    changePuzzle(puzzle || puzzleContext.puzzle);
+    onReset?.();
   };
+
+  if (!showOn.includes(status)) {
+    return null;
+  }
 
   if (asChild) {
     const child = React.Children.only(children);

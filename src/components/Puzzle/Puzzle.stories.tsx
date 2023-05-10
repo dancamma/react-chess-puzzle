@@ -74,16 +74,16 @@ export const Multiple = (args: RootProps) => {
     <div>
       <Puzzle.Root {...args} puzzle={puzzle} onSolve={() => setSolved(true)}>
         <Puzzle.Board />
-        <Puzzle.Restart asChild>
+        <Puzzle.Reset asChild>
           <button>restart</button>
-        </Puzzle.Restart>
-        <Puzzle.Change
+        </Puzzle.Reset>
+        <Puzzle.Reset
           asChild
           puzzle={puzzles[(puzzleIndex + 1) % puzzles.length]}
-          onChange={() => setPuzzleIndex((puzzleIndex + 1) % puzzles.length)}
+          onReset={() => setPuzzleIndex((puzzleIndex + 1) % puzzles.length)}
         >
           <button>next</button>
-        </Puzzle.Change>
+        </Puzzle.Reset>
       </Puzzle.Root>
     </div>
   );

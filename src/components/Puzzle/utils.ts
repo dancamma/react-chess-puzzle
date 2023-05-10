@@ -1,5 +1,5 @@
 import type { Move } from "chess.js";
-import { Status } from "./usePuzzle";
+import { Status } from "./types";
 import React, { CSSProperties, ReactElement, ReactNode } from "react";
 
 export const getCustomSquareStyles = (

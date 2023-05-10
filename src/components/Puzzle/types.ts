@@ -6,7 +6,7 @@ export type Controls = {
   change: (puzzle: Puzzle) => void;
 };
 
-export type Status = "not-started" | "in-progress" | "solved" | "unsolved";
+export type Status = "not-started" | "in-progress" | "solved" | "failed";
 
 export interface PuzzleContext {
   puzzle: Puzzle;
