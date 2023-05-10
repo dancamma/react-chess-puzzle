@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import React from "react";
-import { Puzzle, PuzzleProps } from "./Puzzle";
+import { Puzzle } from "./index";
 import { fromPgn } from "../utils/puzzle";
+import { RootProps } from "./Root";
 
 const pgn = `[Event "Paris"]
 [Site "Paris FRA"]
@@ -35,7 +36,7 @@ console.log(puzzles);
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Components/Puzzle",
-  component: Puzzle,
+  component: Puzzle.Root,
   tags: ["components", "puzzle"],
   argTypes: {
     onSolve: { action: "onSolve" },
@@ -52,7 +53,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof Puzzle>;
+} satisfies Meta<typeof Puzzle.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -65,46 +66,25 @@ export const Single: Story = {
   },
 };
 
-export const Multiple = (args: PuzzleProps) => {
+export const Multiple = (args: RootProps) => {
   const [puzzleIndex, setPuzzleIndex] = React.useState(0);
   const [solved, setSolved] = React.useState(false);
   const puzzle = puzzles[puzzleIndex];
   return (
     <div>
-      <Puzzle {...args} puzzle={puzzle} onSolve={() => setSolved(true)} />
-
-      <button
-        style={{
-          marginTop: "1rem",
-        }}
-        onClick={() => {
-          setPuzzleIndex((i) => (i + 1) % puzzles.length);
-          setSolved(false);
-        }}
-      >
-        Next
-      </button>
-      <button
-        style={{
-          marginLeft: "1rem",
-        }}
-        onClick={() => {
-          setPuzzleIndex((i) => (i + 1) % puzzles.length);
-          setTimeout(() => setPuzzleIndex((i) => (i + 1) % puzzles.length));
-          setSolved(false);
-        }}
-      >
-        Restart
-      </button>
-      {solved && (
-        <div
-          style={{
-            marginTop: "0.5rem",
-          }}
+      <Puzzle.Root {...args} puzzle={puzzle} onSolve={() => setSolved(true)}>
+        <Puzzle.Board />
+        <Puzzle.Restart asChild>
+          <button>restart</button>
+        </Puzzle.Restart>
+        <Puzzle.Change
+          asChild
+          puzzle={puzzles[(puzzleIndex + 1) % puzzles.length]}
+          onChange={() => setPuzzleIndex((puzzleIndex + 1) % puzzles.length)}
         >
-          Solved!
-        </div>
-      )}
+          <button>next</button>
+        </Puzzle.Change>
+      </Puzzle.Root>
     </div>
   );
 };

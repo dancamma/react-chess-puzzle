@@ -1,6 +1,6 @@
 import type { Move } from "chess.js";
 import { Status } from "./usePuzzle";
-import { CSSProperties } from "react";
+import React, { CSSProperties, ReactElement, ReactNode } from "react";
 
 export const getCustomSquareStyles = (
   status: Status,
@@ -34,3 +34,13 @@ export const getCustomSquareStyles = (
 
   return customSquareStyles;
 };
+
+interface ClickableElement extends ReactElement {
+  props: {
+    onClick?: () => void;
+  };
+}
+
+export const isClickableElement = (
+  element: ReactNode
+): element is ClickableElement => React.isValidElement(element);

@@ -104,6 +104,16 @@ export const usePuzzle = (
 
   const isPlayerTurn = currentMoveIndex % 2 === 1;
 
+  const changePuzzle = (puzzle: Puzzle) => {
+    setGame(new Chess(puzzle.fen));
+    setCurrentMoveIndex(0);
+    setStatus("in-progress");
+  };
+
+  const restartPuzzle = () => {
+    changePuzzle(puzzle);
+  };
+
   return {
     game,
     orientation,
@@ -111,6 +121,8 @@ export const usePuzzle = (
     lastMove,
     handlePieceDrop,
     isPlayerTurn,
+    changePuzzle,
+    restartPuzzle,
   };
 };
 
