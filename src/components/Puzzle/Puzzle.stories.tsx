@@ -54,17 +54,10 @@ const meta = {
 } satisfies Meta<typeof Puzzle.Root>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 
-export const Single: Story = {
-  args: {
-    puzzle: puzzles[0],
-  },
-};
-
-export const Multiple = (args: RootProps) => {
+export const Example = (args: RootProps) => {
   const [puzzleIndex, setPuzzleIndex] = React.useState(0);
   const puzzle = puzzles[puzzleIndex];
   return (
