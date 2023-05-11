@@ -55,11 +55,19 @@ export const usePuzzle = (
     }
     const gameCopy = new Chess(game.fen());
 
-    const move = gameCopy.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: "q",
-    });
+    let move: Move | null = null;
+
+    try {
+      move = gameCopy.move({
+        from: sourceSquare,
+        to: targetSquare,
+        promotion: "q",
+      });
+    } catch (e) {}
+
+    if (!move) {
+      return false;
+    }
     setLastMove(gameCopy.history({ verbose: true }).pop());
 
     setGame(gameCopy);
