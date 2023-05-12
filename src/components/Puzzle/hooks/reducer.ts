@@ -43,8 +43,8 @@ export const initializeGame = (puzzle: Puzzle): State => {
     lastMove: game.history({ verbose: true })[game.history().length - 1],
     nextMove: getMove(game, puzzle.moves[0]),
     hint: "none",
-    needCpuMove: puzzle.makeFirstMove ?? false,
-    isPlayerTurn: !puzzle.makeFirstMove ?? true,
+    needCpuMove: !!puzzle.makeFirstMove,
+    isPlayerTurn: !puzzle.makeFirstMove,
   };
 };
 
@@ -66,6 +66,9 @@ export const reducer = (state: State, action: Action): State => {
       }
       return { ...state, hint: "move" };
     case "CPU_MOVE":
+      if (state.isPlayerTurn) {
+        return state;
+      }
       if (["solved", "failed"].includes(state.status)) {
         return state;
       }
@@ -89,6 +92,7 @@ export const reducer = (state: State, action: Action): State => {
             : null,
         needCpuMove: false,
         isPlayerTurn: true,
+        status: "in-progress",
       };
 
     case "PLAYER_MOVE":

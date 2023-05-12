@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Puzzle } from "../../utils/puzzle";
 import type { Move, Square } from "chess.js";
 import { getCustomSquareStyles } from "../utils/utils";
@@ -11,16 +11,13 @@ export const usePuzzle = (
 ) => {
   const [state, dispatch] = useReducer(reducer, puzzle, initializeGame);
 
-  console.log(state);
-  if (state.game && state.needCpuMove) {
-    setTimeout(
-      () =>
-        dispatch({
-          type: "CPU_MOVE",
-        }),
-      250
-    );
-  }
+  useEffect(() => {
+    if (state.needCpuMove) {
+      dispatch({
+        type: "CPU_MOVE",
+      });
+    }
+  }, [state.needCpuMove]);
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
     dispatch({
