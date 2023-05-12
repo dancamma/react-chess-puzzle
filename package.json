@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006 -s public",
     "build-storybook": "storybook build",
-    "release": "release-it"
+    "release": "npm run build && release-it"
   },
   "repository": {
     "type": "git",
