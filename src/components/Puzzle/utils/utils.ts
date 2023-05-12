@@ -10,8 +10,8 @@ const HINT_COLOR = "rgba(27, 172, 166, 0.5)";
 export const getCustomSquareStyles = (
   status: Status,
   hint: Hint,
-  nextMove?: Move,
-  lastMove?: Move
+  nextMove?: Move | null,
+  lastMove?: Move | null
 ) => {
   const customSquareStyles: Record<string, CSSProperties> = {};
 

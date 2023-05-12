@@ -9,8 +9,8 @@ export type State = {
   game: Chess;
   orientation: "white" | "black";
   status: Status;
-  lastMove?: Move;
-  nextMove: Move | null;
+  lastMove?: Move | null;
+  nextMove?: Move | null;
   hint: Hint;
 };
 
@@ -31,14 +31,20 @@ export type Action =
 
 export const initializeGame = (puzzle: Puzzle): State => {
   const game = new Chess(puzzle.fen);
+  let currentMoveIndex = 0;
+  if (puzzle.makeFirstMove) {
+    game.move(puzzle.moves[0]);
+    currentMoveIndex = 1;
+  }
+
   return {
     puzzle,
-    currentMoveIndex: 0,
+    currentMoveIndex,
     game,
     orientation: getOrientation(puzzle),
     status: "not-started",
-    lastMove: undefined,
-    nextMove: getMove(game, puzzle.moves[0]),
+    lastMove: game.history({ verbose: true })[game.history().length - 1],
+    nextMove: getMove(game, puzzle.moves[currentMoveIndex]),
     hint: "none",
   };
 };
