@@ -6,18 +6,26 @@ import { initializeGame, reducer } from "./reducer";
 
 export const usePuzzle = (
   puzzle: Puzzle,
-  onSolve?: () => void,
-  onFail?: () => void
+  onSolve?: (changePuzzle: (puzzle: Puzzle) => void) => void,
+  onFail?: (changePuzzle: (puzzle: Puzzle) => void) => void
 ) => {
   const [state, dispatch] = useReducer(reducer, puzzle, initializeGame);
 
   useEffect(() => {
     if (state.needCpuMove) {
-      dispatch({
-        type: "CPU_MOVE",
-      });
+      setTimeout(
+        () =>
+          dispatch({
+            type: "CPU_MOVE",
+          }),
+        250
+      );
     }
   }, [state.needCpuMove]);
+
+  const changePuzzle = (puzzle: Puzzle) => {
+    dispatch({ type: "INITIALIZE", payload: puzzle });
+  };
 
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
     dispatch({
@@ -27,6 +35,7 @@ export const usePuzzle = (
         targetSquare,
         onSolve,
         onFail,
+        changePuzzle,
       },
     });
     return true;
@@ -34,10 +43,6 @@ export const usePuzzle = (
 
   const onHint = () => {
     dispatch({ type: "TOGGLE_HINT" });
-  };
-
-  const changePuzzle = (puzzle: Puzzle) => {
-    dispatch({ type: "INITIALIZE", payload: puzzle });
   };
 
   return {

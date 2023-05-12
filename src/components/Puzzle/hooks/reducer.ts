@@ -26,8 +26,9 @@ export type Action =
       payload: {
         sourceSquare: Square;
         targetSquare: Square;
-        onSolve?: () => void;
-        onFail?: () => void;
+        onSolve?: (changePuzzle: (puzzle: Puzzle) => void) => void;
+        onFail?: (changePuzzle: (puzzle: Puzzle) => void) => void;
+        changePuzzle: (puzzle: Puzzle) => void;
       };
     };
 
@@ -96,7 +97,8 @@ export const reducer = (state: State, action: Action): State => {
       };
 
     case "PLAYER_MOVE":
-      const { sourceSquare, targetSquare, onSolve, onFail } = action.payload;
+      const { sourceSquare, targetSquare, onSolve, onFail, changePuzzle } =
+        action.payload;
 
       if (["solved", "failed"].includes(state.status)) {
         return state;
@@ -125,7 +127,7 @@ export const reducer = (state: State, action: Action): State => {
 
       if (!isMoveRight) {
         if (onFail) {
-          onFail();
+          onFail(changePuzzle);
         }
         return {
           ...state,
@@ -140,7 +142,7 @@ export const reducer = (state: State, action: Action): State => {
 
       if (isPuzzleSolved) {
         if (onSolve) {
-          onSolve();
+          onSolve(changePuzzle);
         }
 
         return {

@@ -4,8 +4,8 @@ import usePuzzle from "../hooks/usePuzzle";
 
 export interface RootProps {
   puzzle: Puzzle;
-  onSolve?: () => void;
-  onFail?: () => void;
+  onSolve?: (changePuzzle: (puzzle: Puzzle) => void) => void;
+  onFail?: (changePuzzle: (puzzle: Puzzle) => void) => void;
 }
 
 export const PuzzleContext = React.createContext<ReturnType<
