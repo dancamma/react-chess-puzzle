@@ -1,6 +1,7 @@
-import type { Move } from "chess.js";
+import { Chess, Move } from "chess.js";
 import { Hint, Status } from "./types";
 import React, { CSSProperties, ReactElement, ReactNode } from "react";
+import { Puzzle } from "../../utils/puzzle";
 
 const FAIL_COLOR = "rgba(201, 52, 48, 0.5)";
 const SUCCESS_COLOR = "rgba(172, 206, 89, 0.5)";
@@ -9,7 +10,6 @@ const HINT_COLOR = "rgba(27, 172, 166, 0.5)";
 export const getCustomSquareStyles = (
   status: Status,
   hint: Hint,
-  isPlayerTurn: boolean,
   nextMove?: Move,
   lastMove?: Move
 ) => {
@@ -25,10 +25,7 @@ export const getCustomSquareStyles = (
     };
   }
 
-  if (
-    lastMove &&
-    (status === "solved" || (status !== "failed" && isPlayerTurn))
-  ) {
+  if (lastMove && (status === "solved" || status !== "failed")) {
     customSquareStyles[lastMove.from] = {
       backgroundColor: SUCCESS_COLOR,
     };
@@ -67,6 +64,20 @@ interface ClickableElement extends ReactElement {
   };
 }
 
+export const getOrientation = (puzzle: Puzzle) => {
+  const fen = puzzle.fen;
+  const game = new Chess(fen);
+  if (puzzle.makeFirstMove) {
+    game.move(puzzle.moves[0]);
+  }
+  return game.turn() === "w" ? "white" : "black";
+};
+
 export const isClickableElement = (
   element: ReactNode
 ): element is ClickableElement => React.isValidElement(element);
+
+export const getMove = (game: Chess, move: string): Move => {
+  const copy = new Chess(game.fen());
+  return copy.move(move);
+};

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { Puzzle } from "./index";
 import { fromPgn } from "../utils/puzzle";
-import { RootProps } from "./Root";
+import { RootProps } from "./parts/Root";
 
 const pgn = `[Event "Paris"]
 [Site "Paris FRA"]

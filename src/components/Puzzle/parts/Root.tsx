@@ -1,6 +1,6 @@
 import React from "react";
-import { Puzzle } from "../utils/puzzle";
-import usePuzzle from "./usePuzzle";
+import { Puzzle } from "../../utils/puzzle";
+import usePuzzle from "../hooks/usePuzzle";
 
 export interface RootProps {
   puzzle: Puzzle;

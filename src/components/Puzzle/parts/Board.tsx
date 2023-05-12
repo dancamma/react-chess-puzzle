@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { Chessboard } from "react-chessboard";
 import { PuzzleContext } from "./Root";
-import { getCustomSquareStyles } from "./utils";
+import { getCustomSquareStyles } from "../utils/utils";
 
 export interface BoardProps extends React.ComponentProps<typeof Chessboard> {}
 export const Board: React.FC<BoardProps> = ({ ...rest }) => {
@@ -18,7 +18,6 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
     nextMove,
     orientation,
     handlePieceDrop,
-    isPlayerTurn,
     hint,
   } = puzzleContext;
 
@@ -27,7 +26,6 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
       customSquareStyles={getCustomSquareStyles(
         status,
         hint,
-        isPlayerTurn,
         nextMove,
         lastMove
       )}

@@ -1,8 +1,8 @@
 import React, { ReactElement, ReactNode, useContext } from "react";
-import { Puzzle } from "../utils/puzzle";
+import { Puzzle } from "../../utils/puzzle";
 import { PuzzleContext } from "./Root";
-import { isClickableElement } from "./utils";
-import { Status } from "./types";
+import { isClickableElement } from "../utils/utils";
+import { Status } from "../utils/types";
 
 export interface HintProps {
   asChild?: boolean;

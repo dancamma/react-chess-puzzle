@@ -1,5 +1,5 @@
 import { Chess } from "chess.js";
-import type { Puzzle } from "../utils/puzzle";
+import type { Puzzle } from "../../utils/puzzle";
 
 export type Controls = {
   reset: () => void;

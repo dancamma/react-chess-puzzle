@@ -3,6 +3,7 @@ import { parse } from "@mliebelt/pgn-parser";
 export interface Puzzle {
   fen: string;
   moves: string[];
+  makeFirstMove?: boolean;
 }
 export const fromPgn = (pgn: string): Puzzle => {
   const parsed = parse(pgn, { startRule: "game" });
