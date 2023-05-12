@@ -11,6 +11,17 @@ export const usePuzzle = (
 ) => {
   const [state, dispatch] = useReducer(reducer, puzzle, initializeGame);
 
+  console.log(state);
+  if (state.game && state.needCpuMove) {
+    setTimeout(
+      () =>
+        dispatch({
+          type: "CPU_MOVE",
+        }),
+      250
+    );
+  }
+
   function handlePieceDrop(sourceSquare: Square, targetSquare: Square) {
     dispatch({
       type: "PLAYER_MOVE",
@@ -21,15 +32,6 @@ export const usePuzzle = (
         onFail,
       },
     });
-
-    setTimeout(
-      () =>
-        dispatch({
-          type: "CPU_MOVE",
-        }),
-      250
-    );
-
     return true;
   }
 
@@ -52,6 +54,7 @@ export const usePuzzle = (
     hint: state.hint,
     onHint,
     nextMove: state.nextMove,
+    isPlayerTurn: state.isPlayerTurn,
   };
 };
 

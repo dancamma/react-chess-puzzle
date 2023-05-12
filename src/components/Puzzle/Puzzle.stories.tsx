@@ -26,8 +26,8 @@ b8;square;b8;type;Brilliant;persistent;true]} 16... Nxb8 17. Rd8# 1-0`;
 const puzzles = [
   fromPgn(pgn),
   {
-    fen: "6k1/2p2ppb/6qP/8/3p1P2/P7/3n1QK1/R2B4 w - - 4 37",
-    moves: ["g2h1", "g6h6", "h1g1", "h7e4", "f2d2", "h6h1"],
+    fen: "6k1/5p1p/p1q1p1p1/1pB1P3/1Pr3Pn/P4P1P/4Q3/3R2K1 b - - 0 31",
+    moves: ["h4f3", "e2f3", "c4c5", "d1d8", "g8g7", "f3f6"],
     makeFirstMove: true,
   },
 ];

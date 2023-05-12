@@ -12,6 +12,8 @@ export type State = {
   lastMove?: Move | null;
   nextMove?: Move | null;
   hint: Hint;
+  needCpuMove: boolean;
+  isPlayerTurn: boolean;
 };
 
 export type Action =
@@ -31,21 +33,18 @@ export type Action =
 
 export const initializeGame = (puzzle: Puzzle): State => {
   const game = new Chess(puzzle.fen);
-  let currentMoveIndex = 0;
-  if (puzzle.makeFirstMove) {
-    game.move(puzzle.moves[0]);
-    currentMoveIndex = 1;
-  }
 
   return {
     puzzle,
-    currentMoveIndex,
+    currentMoveIndex: 0,
     game,
     orientation: getOrientation(puzzle),
     status: "not-started",
     lastMove: game.history({ verbose: true })[game.history().length - 1],
-    nextMove: getMove(game, puzzle.moves[currentMoveIndex]),
+    nextMove: getMove(game, puzzle.moves[0]),
     hint: "none",
+    needCpuMove: puzzle.makeFirstMove ?? false,
+    isPlayerTurn: !puzzle.makeFirstMove ?? true,
   };
 };
 
@@ -88,6 +87,8 @@ export const reducer = (state: State, action: Action): State => {
                 state.puzzle.moves[state.currentMoveIndex + 1]
               )
             : null,
+        needCpuMove: false,
+        isPlayerTurn: true,
       };
 
     case "PLAYER_MOVE":
@@ -129,6 +130,7 @@ export const reducer = (state: State, action: Action): State => {
           lastMove: move,
           nextMove: null,
           hint: "none",
+          isPlayerTurn: false,
         };
       }
 
@@ -144,6 +146,7 @@ export const reducer = (state: State, action: Action): State => {
           lastMove: move,
           nextMove: null,
           hint: "none",
+          isPlayerTurn: false,
         };
       }
 
@@ -160,6 +163,8 @@ export const reducer = (state: State, action: Action): State => {
           state.puzzle.moves[state.currentMoveIndex + 1]
         ),
         status: "in-progress",
+        needCpuMove: true,
+        isPlayerTurn: false,
       };
 
     default:

@@ -19,6 +19,7 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
     orientation,
     handlePieceDrop,
     hint,
+    isPlayerTurn,
   } = puzzleContext;
 
   return (
@@ -26,6 +27,7 @@ export const Board: React.FC<BoardProps> = ({ ...rest }) => {
       customSquareStyles={getCustomSquareStyles(
         status,
         hint,
+        isPlayerTurn,
         nextMove,
         lastMove
       )}
