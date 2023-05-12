@@ -63,11 +63,14 @@ export const usePuzzle = (
         to: targetSquare,
         promotion: "q",
       });
-    } catch (e) {}
+    } catch (e) {
+      console.log("Invalid move", e);
+    }
 
     if (!move) {
       return false;
     }
+
     setLastMove(gameCopy.history({ verbose: true }).pop());
 
     setGame(gameCopy);
