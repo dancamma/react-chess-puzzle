@@ -1,7 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { Puzzle } from "../../utils/puzzle";
-import type { Move, Square } from "chess.js";
-import { getCustomSquareStyles } from "../utils/utils";
+import type { Square } from "chess.js";
 import { initializeGame, reducer } from "./reducer";
 
 export const usePuzzle = (
@@ -18,7 +17,7 @@ export const usePuzzle = (
           dispatch({
             type: "CPU_MOVE",
           }),
-        250
+        300
       );
     }
   }, [state.needCpuMove]);

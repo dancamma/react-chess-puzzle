@@ -1,4 +1,4 @@
-import { Chess, Move } from "chess.js";
+import { Chess, Move, Square } from "chess.js";
 import { Hint, Status } from "./types";
 import React, { CSSProperties, ReactElement, ReactNode } from "react";
 import { Puzzle } from "../../utils/puzzle";
@@ -12,6 +12,7 @@ export const getCustomSquareStyles = (
   status: Status,
   hint: Hint,
   isPlayerTurn: boolean,
+  activeSquare: Square | null,
   nextMove?: Move | null,
   lastMove?: Move | null
 ) => {
@@ -43,6 +44,12 @@ export const getCustomSquareStyles = (
       backgroundColor: CPU_MOVE_COLOR,
     };
     customSquareStyles[lastMove.to] = {
+      backgroundColor: CPU_MOVE_COLOR,
+    };
+  }
+
+  if (activeSquare) {
+    customSquareStyles[activeSquare] = {
       backgroundColor: CPU_MOVE_COLOR,
     };
   }
@@ -91,4 +98,15 @@ export const isClickableElement = (
 export const getMove = (game: Chess, move: string): Move => {
   const copy = new Chess(game.fen());
   return copy.move(move);
+};
+
+export const isLegalMove = (game: Chess, move: string) => {
+  const copy = new Chess(game.fen());
+
+  try {
+    copy.move(move);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
